@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   build:
     name: Build
@@ -10,6 +14,8 @@ jobs:
     steps:
       - name: Checkout Source Code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Setup Node
         uses: actions/setup-node@v3
@@ -22,6 +28,13 @@ jobs:
           npm i -g pnpm@^8.0.0
           pnpm --version
           node --version
+
+      - name: Dependency Cache
+        id: dependency-cache
+        uses: actions/cache@v3
+        with:
+          path: '**/node_modules'
+          key: pnpm-8-${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
 
       - name: Run pnpm install
         shell: bash
