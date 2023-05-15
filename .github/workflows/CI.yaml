@@ -1,0 +1,29 @@
+name: CI
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18.16.0"
+
+      - name: Install PNPM
+        shell: bash
+        run: |
+          npm i -g pnpm@^8.0.0
+          pnpm --version
+          node --version
+
+      - name: Run pnpm install
+        shell: bash
+        run: |
+          pnpm i --forzen-lockfile
